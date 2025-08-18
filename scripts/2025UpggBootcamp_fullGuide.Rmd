@@ -822,6 +822,7 @@ have the packaged loaded before you do so.
 dummy <- read_csv("https://github.com/rpornmon/2024upggBootcamp-dataExploreInR/raw/main/raw_data/dummy.csv") # generates tibble by default.
 dummy
 ```
+<!-- *I do not think the next part is necessary. We can just practice on the transcriptomics dataset. Or, if we want exercises at this point, they can be done on tables/dataframes accessible through tidyverse, reducing the number of downloads required for the lesson.*
 
 We'll use this dummy data to practice tools that we learned today!
 
@@ -885,7 +886,7 @@ dummy3
 dummy3 %>%
   pivot_longer(cols = c(first_published, last_published), names_to = "first_or_last", values_to = "year")
 ```
-
+-->
 ----------------------------------------------------------------------------------------------------
 
 ## BREAK
@@ -901,8 +902,6 @@ transcriptomics dataset from the following paper:
 [*Translational control of lipogenic enzymes in the cell cycle of synchronous, growing yeast
 cells*](https://www.embopress.org/doi/full/10.15252/embj.201695050)
 
-![](../images/blank_etal_2017.png)
-
 ### What was the goal of the study?
 
 The authors were searching for proteins that are under periodic translational control over the
@@ -912,9 +911,6 @@ course of the cell cycle in yeast, using the size of the cell as a marker for ce
     size of the cell)?
 -   Is the change in protein level due to transcriptional control (at the mRNA level), or
     translational control (at the protein level)?
-
-![Figure 2. Transcription of genes involved in ribosome biogenesis peaks in the G1
-phase](../images/blanketal2017_fig2.png){width="500px"}
 
 ### Which datasets will we be looking at?
 
@@ -932,35 +928,29 @@ In addition to these, we will need help from 2 gene annotation files to understa
 
 ### Who cares?
 
-mRNA sequencing has been fundamental to genomics research. It's very possible you might generate
+RNA sequencing has been fundamental to genomics research. It's very possible you might generate
 data like this in your own research. You may be analying changing mRNA levels in the cell due to a
 normal cellular process, or due to some genetic, epigenetic, or chemical perturbation you did in an
 experiment.
 
-What if you never do mRNA sequencing? Still, at some point, you may have to deal with data formatted
+What if you never do RNA sequencing? Still, at some point, you may have to deal with data formatted
 in a really similar way (protein levels, fluorescence on DNA microarrays, etc.).
 
 ## Load data
 
-Let's load the relevant datasets that we downloaded yesterday.
-
-Are they in your /Downloads? If yes, no worries.
-
-## Exercise: Using the UNIX commands you learned yesterday, let's practice moving our downloaded data to the ./raw_data directory. Unzip any zipped files.
-
-Now let's read into the files:
+We will store the file as a variable first for efficiency, then read in the line of each file using the "read_lines" function. Feel free to load the file using the path as it appears on your local machine; however, in case of any issues, a download link for the data is already provided for you in the code blocks below. 
 
 ```{r load data}
 library(tidyverse)
-mRNA_file <- "../raw_data/GSE81932_Dataset01.txt"
+mRNA_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/GSE81932_Dataset01.txt.gz"
 mRNA_data <- read_lines(mRNA_file)
 
-periodically_expressed_genes_file <- "../raw_data/GSE81932_Dataset02.txt"
+periodically_expressed_genes_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/GSE81932_Dataset02.txt.gz"
 periodically_expressed_genes <- read_lines(periodically_expressed_genes_file)
 
-ribi_annotation_file <- "../raw_data/ribosome_biogenesis_annotations.txt"
+ribi_annotation_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/ribosome_biogenesis_annotations.txt"
 
-scer_names_estimates_file <- "../raw_data/doi_10_5061_dryad_d644f__v20160422/scer-mrna-protein-absolute-estimate.txt"
+scer_names_estimates_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/scer-mrna-protein-absolute-estimate.txt"
 ```
 
 ## Explore the data
