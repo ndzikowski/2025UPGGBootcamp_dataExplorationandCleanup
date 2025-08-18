@@ -19,7 +19,7 @@ Learning objectives:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Data Exploration and Clean-Up
+<!-- # Data Exploration and Clean-Up
 
 Introduce self. Housekeeping.
 
@@ -389,6 +389,7 @@ Combining list
 ```{r}
 c(list(1, 2), list(x=3, y=4))
 ```
+-->
 
 ### Data Frame
 
