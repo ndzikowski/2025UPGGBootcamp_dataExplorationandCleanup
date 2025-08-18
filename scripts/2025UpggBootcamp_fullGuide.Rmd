@@ -8,10 +8,6 @@ editor_options:
     wrap: 100
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 Learning objectives:
 
 -   Download and inspect data using R
