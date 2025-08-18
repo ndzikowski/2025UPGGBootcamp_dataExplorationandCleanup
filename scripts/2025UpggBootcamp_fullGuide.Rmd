@@ -942,15 +942,15 @@ We will store the file as a variable first for efficiency, then read in the line
 
 ```{r load data}
 library(tidyverse)
-mRNA_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/GSE81932_Dataset01.txt.gz"
+mRNA_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/raw/main/rawData/GSE81932_Dataset01.txt.gz"
 mRNA_data <- read_lines(mRNA_file)
 
-periodically_expressed_genes_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/GSE81932_Dataset02.txt.gz"
+periodically_expressed_genes_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/raw/main/rawData/GSE81932_Dataset02.txt.gz"
 periodically_expressed_genes <- read_lines(periodically_expressed_genes_file)
 
-ribi_annotation_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/ribosome_biogenesis_annotations.txt"
+ribi_annotation_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/raw/main/rawData/ribosome_biogenesis_annotations.txt"
 
-scer_names_estimates_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/rawData/scer-mrna-protein-absolute-estimate.txt"
+scer_names_estimates_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/raw/main/rawData/scer-mrna-protein-absolute-estimate.txt"
 ```
 
 ## Explore the data
