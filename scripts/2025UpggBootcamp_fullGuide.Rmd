@@ -125,6 +125,10 @@ column names of data files you download from others, especially if they were mad
 generally doesn't have problem dealing with white spaces between words.
 
 ```{r, error=TRUE}
+my_tib <- as_tibble(mtcars)
+```
+
+```{r, error=TRUE}
 my_tib$miles per gallon
 my_tib %>%
     filter(miles per gallon > 10)

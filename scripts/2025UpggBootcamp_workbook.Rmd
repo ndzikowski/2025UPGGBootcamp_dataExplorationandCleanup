@@ -21,8 +21,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Data Exploration and Clean-Up
 
-The first half of this morning, we'll go through the package `Tidyverse` which you all should
-have installed as part of the lesson yesterday.
+The first half of this morning, we'll go through the package `Tidyverse` which you all should have
+installed as part of the lesson yesterday.
 
 ```{r}
 library(tidyverse)
@@ -43,7 +43,7 @@ table1 # comes with dplyr
 Select columns you want from a tibble.
 
 ```{r}
-select(table1, year)
+
 ```
 
 > Note how you can refer to the column name directly without having to use "" or put it adjacent to
@@ -52,13 +52,13 @@ select(table1, year)
 Select multiple columns
 
 ```{r}
-select(table1, country, year)
+
 ```
 
 Use `-` to exclude columns.
 
 ```{r}
-select(table1, -year)
+
 ```
 
 ### Filter
@@ -75,7 +75,7 @@ See how `table1` has to be called multiple times? That's redundancy!! Using `fil
 redundancy in your code. It filters for observations that match the logical operation you parse in.
 
 ```{r}
-filter(table1, year == 2000) # Using dplyr is much cleaner
+
 ```
 
 Nesting different functions become wordy and unintuitive to write and read. Tidyverse tries to
@@ -95,9 +95,7 @@ tibble down the `pipe` chain. `Pipe` is not limited to just Tidyverse functions.
 
 ```{r}
 # Now, the sequence of steps becomes more intuitive; filter and then select!
-table1 %>%
-    filter(year == 2000) %>%
-    select(country)
+
 ```
 
 ### Mutate
@@ -111,18 +109,16 @@ table1 %>%
 ```
 
 ```{r}
-table1
-```
 
-```{r}
-new_table1 <- table1 %>%
-    mutate(rate = cases / population * 10000)
-new_table1
 ```
 
 Note on naming columns, you generally don't want to include spaces. Sometimes you have to fix the
 column names of data files you download from others, especially if they were made in Excel which
 generally doesn't have problem dealing with white spaces between words.
+
+```{r, error=TRUE}
+my_tib <- as_tibble(mtcars)
+```
 
 ```{r, error=TRUE}
 my_tib$miles per gallon
@@ -131,16 +127,7 @@ my_tib %>%
 ```
 
 ```{r}
-my_tib$'miles per gallon' <- 1:32 
-my_tib$'miles per gallon'
-```
 
-```{r}
-my_tib %>%
-    filter('miles per gallon' > 10)
-# space has meaning in programming!!!
-
-my_tib$miles_per_gallon <- 1:32 # much better
 ```
 
 #### Quick lesson on conditionals
@@ -159,11 +146,6 @@ You can create a dichotomy of tasks for R using `if` and `else` statement.
 plane_speed <- 1000
 car_speed <- 40
 
-if (plane_speed > car_speed) {
-  print("Planes are faster than cars")
-} else {
-  print("Planes are NOT faster than cars")
-}
 ```
 
 There is a nifty function called `if_else()` that you can use within `mutate()` to create a new
@@ -179,9 +161,7 @@ table1 %>%
 Arrange helps sorting the rows of a tibble based on a column.
 
 ```{r}
-table1 %>%
-    mutate(rate = cases / population * 10000, .after = year) %>%
-    arrange(desc(rate)) # sort rate in descending order
+
 ```
 
 ### Summarize()
@@ -189,24 +169,19 @@ table1 %>%
 Summarize give you statistics for whatever you want!
 
 ```{r}
-table1 %>%
-    summarize(max = max(cases), mean = mean(cases))
+
 ```
 
 ### Group_by()
 
 ```{r}
-table1 %>%
-    group_by(year) %>%
-    count()
+
 ```
 
 `summarize()` is particularly useful in combination with `group_by()`
 
 ```{r}
-table1 %>%
-    group_by(year) %>%
-    summarize(max = max(cases), mean = mean(cases))
+
 ```
 
 ## Tidyr
@@ -239,11 +214,7 @@ table4a %>%
 Note that year is of type `chr`. We can use `mutate()` to convert type from `chr` to `dbl`.
 
 ```{r}
-table4a %>%
-    pivot_longer(c('1999', '2000'), 
-                 names_to = "year", # What should we call the new column that will contain the original names?
-                 values_to = "cases") %>% # What should we call the new column that will contain the original values? 
-    mutate(year = parse_double(year))
+
 ```
 
 ### Pivot Wider
@@ -255,9 +226,7 @@ table2
 ```
 
 ```{r}
-table2 %>%
-    pivot_wider(names_from = type, # what should the new column names be
-                values_from = count) # where should the values in new column come from
+
 ```
 
 ## Readr
@@ -278,9 +247,7 @@ naming scheme. Feel free to get used to using `readr` functions to read files, j
 have the packaged loaded before you do so.
 
 ```{r}
-# We know the file is in csv format
-dummy <- read_csv("https://github.com/erickfigue/2025_UPGG_Bootcamp_DataExploreInR/raw/main/raw_data/practice.csv") # generates tibble by default.
-dummy
+
 ```
 
 ----------------------------------------------------------------------------------------------------
