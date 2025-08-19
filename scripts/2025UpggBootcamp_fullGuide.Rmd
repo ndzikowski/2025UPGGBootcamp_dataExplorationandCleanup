@@ -156,7 +156,7 @@ if (10 > 5) {
 You can create a dichotomy of tasks for R using `if` and `else` statement.
 
 ```{r}
-plant_speed <- 1000
+plane_speed <- 1000
 car_speed <- 40
 
 if (plane_speed > car_speed) {
@@ -298,6 +298,8 @@ transcriptomics dataset from the following paper:
 [*Translational control of lipogenic enzymes in the cell cycle of synchronous, growing yeast
 cells*](https://www.embopress.org/doi/full/10.15252/embj.201695050)
 
+![](https://raw.githubusercontent.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/main/images/blank_etal_2017.png)
+
 ### What was the goal of the study?
 
 The authors were searching for proteins that are under periodic translational control over the
@@ -310,6 +312,10 @@ course of the cell cycle in yeast, using the size of the cell as a marker for ce
 
 ### Which datasets will we be looking at?
 
+![](https://raw.githubusercontent.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/main/images/blanketal2017_fig2.png)
+
+[Figure 2. Transcription of genes involved in ribosome biogenesis peaks in the G1 phase]
+
 Dataset 1: **A dataframe** of mRNA levels of over 6000 transcripts analyzed in THIS study.
 Specifically, the authors took the normalized read counts of each mRNA transcript, at each different
 cell size, found the mean read count for each gene across all of the cell sizes, and expressed the
@@ -320,13 +326,16 @@ Dataset 2: **A vector** of 144 transcripts whose levels were found to fluctuate 
 the cell cycle, both in this study, and in *Spellman et. al, 1998*. These are the genes under
 "periodic transcriptional control".
 
-In addition to these, we will need help from 2 gene annotation files to understand the data.
+In addition to these, we will need help from 2 gene annotation files to understand the data: 1)
+Ribosome biogenesis gene annotations. This has all yeast gene names and their corresponding
+systematic IDs (This is a yeast thing, ok. Don't ask me) 2) Annotations (from Dryad) for all yeast
+genes, not just the ones involved in ribosome biogenesis
 
 ### Who cares?
 
-RNA sequencing has been fundamental to genomics research. It's very possible you might generate
-data like this in your own research. You may be analying changing mRNA levels in the cell due to a
-normal cellular process, or due to some genetic, epigenetic, or chemical perturbation you did in an
+RNA sequencing has been fundamental to genomics research. It's very possible you might generate data
+like this in your own research. You may be analying changing mRNA levels in the cell due to a normal
+cellular process, or due to some genetic, epigenetic, or chemical perturbation you did in an
 experiment.
 
 What if you never do RNA sequencing? Still, at some point, you may have to deal with data formatted
@@ -334,7 +343,10 @@ in a really similar way (protein levels, fluorescence on DNA microarrays, etc.).
 
 ## Load data
 
-We will store the file as a variable first for efficiency, then read in the line of each file using the "read_lines" function. Feel free to load the file using the path as it appears on your local machine; however, in case of any issues, a download link for the data is already provided for you in the code blocks below. 
+We will store the file as a variable first for efficiency, then read in the line of each file using
+the "read_lines" function. Feel free to load the file using the path as it appears on your local
+machine; however, in case of any issues, a download link for the data is already provided for you in
+the code blocks below.
 
 ```{r load data}
 library(tidyverse)
@@ -351,47 +363,43 @@ scer_names_estimates_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dat
 
 ## Explore the data
 
-Try "printing" the values contained in the variable `periodically_expressed_genes`.
-
-[@akaike1974]
+Try "printing" the values contained in the variable `periodically_expressed_genes` and checking its
+data type.
 
 ```{r}
 periodically_expressed_genes
-print(periodically_expressed_genes)
-```
 
-`periodically_expressed_genes` is a "vector" data type. It is similar to an "array" or a "list" in
-some other programming languages, BUT R has its own version of "list." Essentially, R has both
-"vector" and "list" data types, and they function differently. "Vectors" are what you would think of
-when you think of Python's "array" or "list"
-
-```{r}
 str(periodically_expressed_genes)
 ```
 
-`periodically_expressed_genes` is really clean data. What about `mRNA_data`?
+`periodically_expressed_genes` is a "vector" data type. It is similar to a 1D array in some other
+programming languages, like Python.
+
+`periodically_expressed_genes` is really simple & clean data. What about `mRNA_data`?
 
 ```{r}
-mRNA_data
+head(mRNA_data)
 ```
 
-This one has a header. Luckily, if we turn the file into a tibble, that header will be recognized
-immediately.
+This one is a dataframe (table) with more information, and it has a header at the top. Luckily, if
+we turn the file into a tibble, that header will be recognized immediately.
 
 ```{r}
 mRNA <- read_tsv(mRNA_file)
 ```
 
-Remember, the output of many tidyverse functions will automatically be a tibble! Applying read_tsv
-to a data file can accomplish this.
+Remember, the output of many tidyverse "read" functions will automatically be a tibble! Applying
+read_tsv to a data file can accomplish this.
 
-Now let's peek inside the ribosome biogenesis annotations:
+Now that we've checked the formats of the experimental data, let's look at the annotations for
+ribosome biogenesis genes:
 
 ```{r}
 read_lines(ribi_annotation_file, n_max=10)
 ```
 
-Here, we can see that comments are marked with a "!"
+Here, we can see that there are comments at the top marked with a "!". This is really common in gene
+annotation files, and we should skip them if we want a workable data frame.
 
 ### Exercise: How can we make a tibble that skips these?
 
@@ -403,7 +411,7 @@ ribi_annotation <- read_tsv(ribi_annotation_file, comment = "!")
 ribi_annotation
 ```
 
-What about for the Dryad annotations?
+What about for the Dryad annotations containing the systematic IDs/common gene names?
 
 ```{r}
 read_lines(scer_names_estimates_file, n_max = 10)
@@ -424,7 +432,7 @@ and how many genes ended up making it on the "periodically expressed" list.
 
 How can we get these values?
 
-Here's a really easy, built-in way to do so:
+Here's a really easy, built-in way in R to do so:
 
 ```{r}
 length(mRNA_data)
@@ -438,8 +446,8 @@ length(periodically_expressed_genes)
 
 And 144 genes were periodically expressed.
 
-But we're using tidyverse, so we don't even need `length()`. Just peek at the tibble, the
-information is right there!
+But we're using tidyverse, so we don't even need `length()`. Just open the tibble, the information
+is right there!
 
 ```{r}
 mRNA
@@ -469,14 +477,16 @@ ribi_annotation
 ```
 
 The datasets in this study identified transcripts by their gene IDs, specific only to *S.
-cerevisiae* - these can be found in the column 'Systematic Name/Complex Accession'. The
-'Gene/Complex' column provides a more common name for that gene.
+cerevisiae* - these can be found in the column 'Systematic Name/Complex Accession' in the
+annotations. These IDs won't tell you a whole lot about the gene, so to understand the biology here
+and communicate it to the public, it's better to have the common gene names. These can be found in
+the 'Gene/Complex' column.
 
 Additionally, we have the column "Gene Ontology Term" for each gene, associating it with a
 biological process. The file we downloaded was called `ribosome_biogenesis_annotations.txt`, so we'd
 probably assume that these are only genes involved in ribosome biogenesis.
 
-Still, let's double check that to be sure!
+Still, using what we just learned, let's double check that to be sure.
 
 ### Exercise: Inspect `ribi_annotation` and check whether the genes are, for sure, only involved in ribosomal biogenesis.
 
@@ -496,8 +506,8 @@ distinct(ribi_annotation, `Gene Ontology Term`)
 
 So, clearly, we only have genes involved in ribosome biogenesis.
 
-The most useful part of this annotation file will be to convert the yeast gene IDs into more common
-names for downtstream analyses.
+The most useful part of this annotation file will be to convert the systematic gene IDs into more
+common names for downstream analyses.
 
 ### Discussion:
 
@@ -550,7 +560,8 @@ ribi_genes_periodic
 We can now see that 34/144 periodically expressed genes are involved in ribosome biogenesis (or that
 34/187 ribosome biogenesis genes are periodically expressed during the cell cycle).
 
-**Note:** There are often many ways to arrive at the same solution, even for the same function!
+**Note:** There are often many ways format tidyverse functions. Choose the formatting that works
+best for you. I like this one best:
 
 ```{r}
 
@@ -562,8 +573,9 @@ In this case, would you want to do option 2 from above? Why or why not?
 
 ## Did our favorite gene make the cut?
 
-We can also check if our favorite gene is on this list! It would be easy enough to do manually, but
-let's pretend our dataframe is still really long...
+We can also check if our favorite gene is on this list! It would be easy enough to do manually, or
+with Ctrl+F in a text editor, but let's pretend our dataframe is still really long...and that our
+text editor has crashed and doesn't wanna open again...
 
 ```{r}
 "NUG1" %in% ribi_genes_periodic$Gene
@@ -575,7 +587,7 @@ It's there! Let's print the line to see what its Systematic Name is.
 filter(ribi_genes_periodic, Gene == "NUG1")
 ```
 
-### Exercise: Check whether the gene "RPS6B" is a periodically expressed gene, and try printing its line to see its systematic name.
+### Exercise: Check whether the gene "RPS6B" is a periodically expressed gene, and find its systematic name.
 
 *Solution:*
 
@@ -594,17 +606,18 @@ Oops! That one's not there.
 Up until now, we were looking only at ribosome biogenesis genes, since that was a major GO term that
 came up in the data. What about the genes involved in other biological processes?
 
-Let's read the Dryad file!
+Let's read the Dryad annotation file!
 
-The columns `"orf"` and `"gene"` will be useful to us for now.
+The columns `"orf"` and `"gene"` will be useful to us for now (these correspond to the systematic ID
+and common gene name, like in the other annotation file.)
 
-Let's create a new dataframe with only these columns.
+Let's create a new data frame with only these columns:
 
 ```{r}
 scer_gene_names <- select(scer_names_estimates, Gene = gene, SystematicName = orf)
 ```
 
-### Challenge:
+### Exercise:
 
 1.  Get the names of genes from the Dryad annotations that are periodically expressed.
 2.  Extract only the common gene names from the output of 1.
@@ -627,56 +640,53 @@ To double-check, its systematic name is indeed not in the list of periodically e
 
 ### Exploring more of the Dryad data
 
-This dataset actually has a lot more interesting information, like mRNA and protein levels for each
-gene. To explore these columns, we can use the `arrange()` function. This will allow us to sort the
-dataframe according to a variable we're interested in.
+This dataset actually has a lot more interesting information, like estimated mRNA and protein levels
+for each gene. To explore these columns, we can use the `arrange()` function. This will allow us to
+sort the dataframe according to a variable we're interested in.
 
 ```{r}
 arrange(scer_names_estimates, gene)
 ```
 
-The default is ascending order.
+The default is ascending order. What goes at the end?
 
 ```{r}
 arrange(scer_names_estimates, gene) %>% tail()
 ```
 
-What would this do?
+### Exercise: arrange data in descending order of common gene name instead
 
 ```{r}
 arrange(scer_names_estimates, desc(gene))
 ```
 
-What about this?
-
-```{r}
-arrange(scer_names_estimates, desc(gene), mrna)
-```
-
-Wait, can't we just use `sort()` instead or `arrange()`?
+Here's another interesting tidbit: with `arrange()`, NA values automatically get put the end,
+regardless of whether you're arranging in ascending or descending order. This makes removal of NA
+values/data exploration more convenient.
 
 ```{r}
 arrange(scer_names_estimates, desc(gene), mrna) %>% tail()
 ```
 
-With `arrange()`, NA values automatically get put the end, regardless of whether you're arranging in
-ascending or descending order. This makes removal or data exploration more convenient.
-
 ## Let's put the two biggest datasets together
 
 What if our favorite gene is periodically expressed, but it was only identified in the 2017 study,
-but not the 1998 study? (This would mean it was never included in `periodically_expressed_genes`).
+but not the 1998 study they used to validate their data? (Remember - only genes identified in BOTH
+of those studies actually made it into the in `periodically_expressed_genes` data). What "new"
+periodically expressed genes did this study identify?
 
 Well, we have access to all of the mRNA data (\>6000 transcripts), and a comprehensive annotation
 set from Dryad. Let's put these two together to see what's happening to ALL of the genes, so then we
 can check what's happening to our favorite genes.
 
-There are a bunch of ways to join datasets together on common keys. We can try out a bunch of these
+We need to figure out a way to join these two datasets on a common column. We can try out a bunch of
 `join` methods and see what we get.
 
-A "key" that both datasets have in common is the "systematic name". However, this list of gene IDs
-is labeled "SystematicName" in the Dryad annotations, but labeled "ORF" in Dataset01 (mRNA). Let's
-change the name of one of the columns to match:
+A column that both datasets have in common is the "systematic ID". However, this column has a
+different label in each dataset: "SystematicName" in the Dryad annotations, "ORF" in the mRNA
+dataset.
+
+### Exercise: Change the column name in one of these datasets so that they match.
 
 ```{r}
 names(mRNA)[1] <- "SystematicName"
@@ -690,9 +700,7 @@ Let's perform a `left_join()` on the two datasets, following this format:
 
 This will take all rows of dataframe 'x', & keep all of the columns in 'x', while merging dataframe
 'y' on the desired key and appending columns from 'y', with values that correctly correspond to each
-key.
-
-That might sound confusing at first, so let's just see what happens:
+key. If there is no corresponding value in "y", we'll see "NA".
 
 ```{r}
 mRNA_named <- left_join(mRNA, scer_gene_names, by = "SystematicName")
@@ -717,14 +725,17 @@ you to find the culprit (on your own time, if you're interested).
 You've done all this work - be sure to save it now!
 
 ```{r}
-write_csv(mRNA_named, "../processed_files/mRNA_data_with_gene_names.csv")
+write_csv(mRNA_named, "../output/mRNA_data_with_gene_names.csv")
 ```
 
 ## Reshaping tibbles
 
-Sometimes, we might want to reshape a tibble to make it better formatted
+Sometimes, we might want to reshape a tibble to make it better formatted for plotting/visualization
+later on.
 
-for plotting/visualization later on. Dataset01 can be reshaped into a longer, and less wide, format:
+### Exercise: How can the mRNA data be reshaped? (Think about the "pivot" functions we learned earlier today). Once you reshape the data, discuss: What downstream analyses might require you to reshape the data like this?
+
+One solution:
 
 ```{r}
 mRNA_named
@@ -734,11 +745,10 @@ pivot_longer(mRNA_named,cols = ends_with("fL"),
         values_to="log2_ratio")
 ```
 
-What do you notice changed about Dataset01?
+Now I'm realizing, we might run into issues if all of the cell volumes are formatted as a "(integer)
+fL", instead of just the integer.
 
-We might run into issues if all of the cell volumes are formatted as a "(integer) fL".
-
-## Exercise: Look through your cheat sheets. What function(s) can we pipe to remove the " fL" from every value in the "Vol_fL" column?
+## Exercise: What function(s) can we add on to remove the " fL" string from every value in the "Vol_fL" column?
 
 *Solution:*
 
@@ -746,7 +756,7 @@ We might run into issues if all of the cell volumes are formatted as a "(integer
 pivot_longer(mRNA_named,cols = ends_with("fL"),
     names_to = "Vol_fL",
         values_to="log2_ratio") %>%
-            mutate(Vol_fL = parse_double(str_remove(Vol_fL, " fL")))
+            mutate(Vol_fL = as.numeric(str_remove(Vol_fL, " fL")))
 ```
 
 This looks easier to work with now. Let's save it to a new tibble:
@@ -756,21 +766,26 @@ mRNA_data_long <-
 pivot_longer(mRNA_named,cols = ends_with("fL"), 
     names_to = "Vol_fL", 
         values_to="log2_ratio") %>%
-            mutate(Vol_fL = parse_double(str_remove(Vol_fL, " fL")))
+            mutate(Vol_fL = as.numeric(str_remove(Vol_fL, " fL")))
 ```
 
-Now, we can easily pick 3 genes we're most interested in, and plot their fluctuating mRNA levels
-over the course of the cell cycle!
+Now, we can easily pick 3 genes we're most interested in, and examine (or plot) their fluctuating
+mRNA levels over the course of the cell cycle.
 
-Let's save that information into a small dataframe, and then Kayla and Gabe will guide you through
-plotting.
+Let's save that information into a small dataframe, and then it will be ready to plot.
 
 ```{r}
 mRNA_data_3genes <- filter(mRNA_data_long, Gene %in% c("ACT1","NOP16","NOP56"))
 ```
 
 ```{r}
-write_csv(mRNA_data_3genes, "../processed_files/mRNA_data_3genes.csv")
+write_csv(mRNA_data_3genes, "../output/mRNA_data_3genes.csv")
 ```
 
-# \## Questions?
+### What else can we do with this data? What would YOU be interested in figuring out?
+
+```{r}
+
+```
+
+### Questions?
