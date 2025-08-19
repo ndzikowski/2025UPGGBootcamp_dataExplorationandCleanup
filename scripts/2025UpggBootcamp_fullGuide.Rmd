@@ -21,85 +21,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Data Exploration and Clean-Up
 
-The first half of this morning, we'll go through the package called `Tidyverse` which you all should
+The first half of this morning, we'll go through the package `Tidyverse` which you all should
 have installed as part of the lesson yesterday.
-
-## Tidyverse (\~30 min)
-
-What is [Tidyverse](https://www.tidyverse.org/)? Tidyverse is a collection of R packages that had
-been designed and developed for data science. R is not a new language, and Tidyverse's philosophy is
-about reducing redundancy and improving coding style to be cleaner and more intuitive.
-
-First, even though we have all installed the package Tidyverse, the package has yet been loaded into
-your environment. You won't have access to Tidyverse's functions unless you run `library(tidyverse)`
 
 ```{r}
 library(tidyverse)
-```
-
-Tidyverse is a literal gold mine, and there's no way we're going to cover everything in just a few
-hours! We're going to go through a few functions that are particularly useful and most commonly
-used.
-
-### Tibble
-
-A `tibble` is Tidyverse's attempt to improve on `data frame`. In general, they are about equivalent
-in terms of function. For the sake of this lesson, we'll use `tibble` because any Tidyverse's
-`readr` function would output a `tibble` by default. Don't worry about the differences - they are,
-for the most parts, interchangeable.
-
-You can convert a preexisting data frame into a tibble.
-
-```{r}
-my_tib <- as_tibble(mtcars) # Converting a data frame to tibble
-my_tib # looks very similar to data frame
-```
-
-Another way to create a tibble. Key components are column names and values. Each column can only
-contain one data type.
-
-```{r}
-my_tib2 <- tibble(name = c("Josh", "Peter"),
-                  income = c(100000000, 20))
-my_tib2
-```
-
-Conventionally, for data frames and tibbles, each row contains observations, each column contains
-variables, and each cell contains values.
-
-```{r}
-my_tib
-```
-
-Subsetting, same as data frame
-
-```{r}
-tb <- tibble(
-  x = runif(5),
-  y = rnorm(5))
-# Extract by name 1
-tb$x
-# Extract by name 2
-tb[["x"]]
-# Extract by column index 1
-tb[[1]]
-```
-
-```{r}
-# If have time, example of differences between data frame vs tibble
-mtcars[,1]
-as_tibble(mtcars)[,1]
-```
-
-```{r}
-class(tb)
 ```
 
 ## Dplyr - Data Manipulation
 
 Tidyverse is a meta-package, meaning it includes multiple packages within it. One of them is `dplyr`
 which contains functions involving common data manipulation tasks. Note that these functions
-generally also work on data frames, not just tibble.
+generally also work on data frames and tibbles.
 
 ```{r}
 table1 # comes with dplyr
