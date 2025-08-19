@@ -341,7 +341,7 @@ experiment.
 What if you never do RNA sequencing? Still, at some point, you may have to deal with data formatted
 in a really similar way (protein levels, fluorescence on DNA microarrays, etc.).
 
-### Load data
+## Load data
 
 We will store the file as a variable first for efficiency, then read in the line of each file using
 the "read_lines" function. Feel free to load the file using the path as it appears on your local
@@ -361,7 +361,7 @@ ribi_annotation_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExpl
 scer_names_estimates_file <- "https://github.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/raw/main/rawData/scer-mrna-protein-absolute-estimate.txt"
 ```
 
-### Explore the data
+## Explore the data
 
 Try "printing" the values contained in the variable `periodically_expressed_genes` and checking its
 data type.
@@ -425,7 +425,7 @@ scer_names_estimates <- read_tsv(scer_names_estimates_file, comment = "#")
 scer_names_estimates
 ```
 
-### Explore data further
+## What can we learn about the data?
 
 One of the first things you might be curious about is how many transcripts were analyzed in total,
 and how many genes ended up making it on the "periodically expressed" list.
@@ -468,7 +468,7 @@ n_distinct(periodically_expressed_genes)
 
 Looks like every entry is unique.
 
-### Let's explore our ribi annotation file
+## Let's explore our ribi annotation file
 
 Which parts of this dataframe are we interested in?
 
@@ -514,7 +514,7 @@ common names for downstream analyses.
 Why do you think we provided 1 argument for the `n_distinct()` function, but 2 arguments for
 `distinct()` ?
 
-### Cleaning up the annotation file
+## Cleaning up the annotation file
 
 ### Exercise: Take only the columns we want from the dataframe: the gene names and the systematic IDs.
 
@@ -546,7 +546,7 @@ n_distinct(ribi_genes)
 
 Looks like our whole dataframe is made up of distinct entries now!
 
-### Which ribosome biogenesis genes are periodically expressed during the cell cycle?
+## Which ribosome biogenesis genes are periodically expressed during the cell cycle?
 
 We want to filter `ribi_genes` to only include the ones that appear in the
 periodically_expressed_genes, and make this a new dataframe.
@@ -571,7 +571,7 @@ ribi_genes_periodic2 <- ribi_genes %>%
 
 In this case, would you want to do option 2 from above? Why or why not?
 
-### Did our favorite gene make the cut?
+## Did our favorite gene make the cut?
 
 We can also check if our favorite gene is on this list! It would be easy enough to do manually, or
 with Ctrl+F in a text editor, but let's pretend our dataframe is still really long...and that our
@@ -601,7 +601,7 @@ filter(ribi_genes_periodic, Gene == "RPS6B")
 
 Oops! That one's not there.
 
-### What about genes with other functions?
+## What about genes with other functions?
 
 Up until now, we were looking only at ribosome biogenesis genes, since that was a major GO term that
 came up in the data. What about the genes involved in other biological processes?
@@ -622,8 +622,6 @@ scer_gene_names <- select(scer_names_estimates, Gene = gene, SystematicName = or
 1.  Get the names of genes from the Dryad annotations that are periodically expressed.
 2.  Extract only the common gene names from the output of 1.
 3.  Is the gene NOP56 on this list?
-
-*Solution:*
 
 ```{r}
 filter(scer_gene_names, SystematicName %in% periodically_expressed_genes)
@@ -658,8 +656,6 @@ arrange(scer_names_estimates, gene) %>% tail()
 
 ### Exercise: arrange data in descending order of common gene name instead
 
-*Solution:*
-
 ```{r}
 arrange(scer_names_estimates, desc(gene))
 ```
@@ -672,7 +668,7 @@ values/data exploration more convenient.
 arrange(scer_names_estimates, desc(gene), mrna) %>% tail()
 ```
 
-### Let's put the two biggest datasets together
+## Let's put the two biggest datasets together
 
 What if our favorite gene is periodically expressed, but it was only identified in the 2017 study,
 but not the 1998 study they used to validate their data? (Remember - only genes identified in BOTH
@@ -691,8 +687,6 @@ different label in each dataset: "SystematicName" in the Dryad annotations, "ORF
 dataset.
 
 ### Exercise: Change the column name in one of these datasets so that they match.
-
-*Solution:*
 
 ```{r}
 names(mRNA)[1] <- "SystematicName"
@@ -726,7 +720,7 @@ according to the parameters/thresholds used by the authors; or, maybe they just 
 in both the 2017 and 1998 papers. Following the authors' methodology, your data is now set up for
 you to find the culprit (on your own time, if you're interested).
 
-### Saving your work
+## Saving your work
 
 You've done all this work - be sure to save it now!
 
@@ -734,14 +728,14 @@ You've done all this work - be sure to save it now!
 write_csv(mRNA_named, "../output/mRNA_data_with_gene_names.csv")
 ```
 
-### Reshaping tibbles
+## Reshaping tibbles
 
 Sometimes, we might want to reshape a tibble to make it better formatted for plotting/visualization
 later on.
 
 ### Exercise: How can the mRNA data be reshaped? (Think about the "pivot" functions we learned earlier today). Once you reshape the data, discuss: What downstream analyses might require you to reshape the data like this?
 
-*One solution:*
+One solution:
 
 ```{r}
 mRNA_named
@@ -754,7 +748,7 @@ pivot_longer(mRNA_named,cols = ends_with("fL"),
 Now I'm realizing, we might run into issues if all of the cell volumes are formatted as a "(integer)
 fL", instead of just the integer.
 
-### Exercise: What function(s) can we add on to remove the " fL" string from every value in the "Vol_fL" column?
+## Exercise: What function(s) can we add on to remove the " fL" string from every value in the "Vol_fL" column?
 
 *Solution:*
 
