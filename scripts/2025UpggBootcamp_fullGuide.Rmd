@@ -365,6 +365,8 @@ transcriptomics dataset from the following paper:
 [*Translational control of lipogenic enzymes in the cell cycle of synchronous, growing yeast
 cells*](https://www.embopress.org/doi/full/10.15252/embj.201695050)
 
+![](https://raw.githubusercontent.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/main/images/blank_etal_2017.png)
+
 ### What was the goal of the study?
 
 The authors were searching for proteins that are under periodic translational control over the
@@ -376,6 +378,10 @@ course of the cell cycle in yeast, using the size of the cell as a marker for ce
     translational control (at the protein level)?
 
 ### Which datasets will we be looking at?
+
+![](https://raw.githubusercontent.com/ndzikowski/2025UPGGBootcamp_dataExplorationandCleanup/main/images/blanketal2017_fig2.png)
+
+[Figure 2. Transcription of genes involved in ribosome biogenesis peaks in the G1 phase]
 
 Dataset 1: **A dataframe** of mRNA levels of over 6000 transcripts analyzed in THIS study.
 Specifically, the authors took the normalized read counts of each mRNA transcript, at each different
